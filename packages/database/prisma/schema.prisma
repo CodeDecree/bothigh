@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  contact      String?  // Optional contact field
+  isVerified   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  bots         Bot[]    // One-to-Many relation with Bot
+
+  @@map("users") // Optional: Renaming table in the database if needed
+}
+
+model Bot {
+  id           Int      @id @default(autoincrement())
+  name         String   @unique
+  description  String?
+  config       Json     // Dynamic bot-specific configurations
+  userId       Int      // Foreign key to User
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("bots") // Optional: Renaming table in the database if needed
+}

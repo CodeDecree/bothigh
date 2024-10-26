@@ -1,0 +1,17 @@
+version: "3"
+
+volumes:
+  database:
+    driver: local
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: turborepo_postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: turborepo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
